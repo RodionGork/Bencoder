@@ -16,7 +16,7 @@ public class BencParser {
         return readUnknownTypeNode();
     }
     
-    BencNode readUnknownTypeNode() {
+    private BencNode readUnknownTypeNode() {
         if (pos >= data.length) {
             throw unexpectedEnd();
         }
