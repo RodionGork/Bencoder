@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.rodiongork.bencoder.represent.BencNode;
-import com.sun.xml.internal.ws.encoding.soap.SerializationException;
 
 public class BencSerializer {
 
@@ -13,8 +12,6 @@ public class BencSerializer {
     private StringConverter stringConverter = new StringConverter();
 
     private ListConverter listConverter = new ListConverter(this);
-
-    private ArrayConverter arrayConverter = new ArrayConverter(this);
 
     private MapConverter mapConverter = new MapConverter(this);
 
@@ -31,10 +28,8 @@ public class BencSerializer {
             return numberConverter;
         } else if (CharSequence.class.isAssignableFrom(cls)) {
             return stringConverter;
-        } else if (List.class.isAssignableFrom(cls)) {
+        } else if (List.class.isAssignableFrom(cls) || cls.isArray()) {
             return listConverter;
-        } else if (cls.isArray()) {
-            return arrayConverter;
         } else if (Map.class.isAssignableFrom(cls)) {
             return mapConverter;
         }
