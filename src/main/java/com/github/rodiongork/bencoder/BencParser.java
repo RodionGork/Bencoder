@@ -13,6 +13,13 @@ public class BencParser {
     }
     
     public BencNode readValueAsTree() {
+        return readUnknownTypeNode();
+    }
+    
+    BencNode readUnknownTypeNode() {
+        if (pos >= data.length) {
+            throw unexpectedEnd();
+        }
         if (data[pos] == 'i') {
             return readIntNode();
         } else if (data[pos] == 'l') {
@@ -36,11 +43,44 @@ public class BencParser {
     }
     
     ListNode readListNode() {
-        return null;
+        int start = pos;
+        ListNode list = new ListNode();
+        pos++;
+        while (true) {
+            try {
+                if (data[pos] == 'e') {
+                    break;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new ParseException("Unexpected end of list which started at pos " + start);
+            }
+            list.add(readUnknownTypeNode());
+        }
+        pos++;
+        return list;
     }
     
     DictNode readDictNode() {
-        return null;
+        int start = pos;
+        DictNode dict = new DictNode();
+        pos++;
+        while (true) {
+            try {
+                if (data[pos] == 'e') {
+                    break;
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new ParseException("Unexpected end of dictionary which started at pos " + start);
+            }
+            if (!Character.isDigit(data[pos])) {
+                throw new ParseException("Dictionary contains non-bytestring key at pos " + pos);
+            }
+            BytesNode key = readBytesNode();
+            BencNode value = readUnknownTypeNode();
+            dict.put(key.getValueAsString(), value);
+        }
+        pos++;
+        return dict;
     }
     
     BytesNode readBytesNode() {
@@ -64,9 +104,13 @@ public class BencParser {
                 from++;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ParseException("Unexpected end of input at pos " + pos);
+            throw unexpectedEnd();
         }
         return from;
+    }
+    
+    private ParseException unexpectedEnd() {
+        return new ParseException("Unexpected end of input at pos " + pos);
     }
     
     private long parseLong(int offset, int length) {

@@ -11,7 +11,7 @@ public class BencParserTest {
     public void testReadIntNode() {
         initWith("i15e");
         IntNode node = parser.readIntNode();
-        Assert.assertEquals(15L, node.getValue());
+        Assert.assertEquals(15, node.getValue());
     }
     
     @Test(expected = BencParser.ParseException.class)
@@ -33,6 +33,27 @@ public class BencParserTest {
         parser.readBytesNode();
     }
     
+    @Test
+    public void testListNode() {
+        initWith("li-2e2: .e");
+        ListNode list = parser.readListNode();
+        Assert.assertEquals(2, list.size());
+        IntNode node0 = (IntNode) list.get(0);
+        BytesNode node1 = (BytesNode) list.get(1);
+        Assert.assertEquals(-2, node0.getValue());
+        Assert.assertEquals(" .", node1.getValueAsString());
+    }
+    
+    @Test
+    public void testDictNode() {
+        initWith("d3:zloi0e4:mlin2:yoe");
+        DictNode dict = parser.readDictNode();
+        Assert.assertEquals(2, dict.size());
+        IntNode node0 = (IntNode) dict.get("zlo");
+        BytesNode node1 = (BytesNode) dict.get("mlin");
+        Assert.assertEquals(0, node0.getValue());
+        Assert.assertEquals("yo", node1.getValueAsString());
+    }
     private void initWith(String input) {
         parser = new BencParser(input.getBytes());
     }
