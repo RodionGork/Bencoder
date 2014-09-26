@@ -120,6 +120,10 @@ public class BencParser {
             throw new ParseException("Error while parsing integer from pos " + pos);
         }
     }
+
+    public static BencNode bytesToTree(byte[] bytes) {
+        return new BencParser(bytes).readValueAsTree();
+    }
     
     public static class ParseException extends RuntimeException {
         private ParseException(String s) {
