@@ -1,5 +1,10 @@
-package com.github.rodiongork.bencoder;
+package com.github.rodiongork.bencoder.represent;
 
+import com.github.rodiongork.bencoder.represent.BencParser;
+import com.github.rodiongork.bencoder.represent.BytesNode;
+import com.github.rodiongork.bencoder.represent.DictNode;
+import com.github.rodiongork.bencoder.represent.IntNode;
+import com.github.rodiongork.bencoder.represent.ListNode;
 import org.junit.Test;
 import org.junit.Assert;
 

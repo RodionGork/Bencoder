@@ -1,4 +1,4 @@
-package com.github.rodiongork.bencoder;
+package com.github.rodiongork.bencoder.represent;
 
 public class IntNode implements BencNode {
     

@@ -1,8 +1,6 @@
-package com.github.rodiongork.bencoder;
+package com.github.rodiongork.bencoder.represent;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.AbstractList;
 
 public class ListNode extends ArrayList<BencNode> implements BencNode {
 
