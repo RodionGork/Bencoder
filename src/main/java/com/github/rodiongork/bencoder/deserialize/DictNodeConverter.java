@@ -18,6 +18,9 @@ public class DictNodeConverter implements NodeConverter<DictNode> {
     }
     
     public <Y> Y convert(DictNode node, Class<Y> cls) {
+        if (Object.class.equals(cls)) {
+            return (Y) convert(node, new TypeRef(Map.class, new TypeRef(Object.class, null)));
+        }
         return convertPojo(node, cls);
     }
     

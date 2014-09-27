@@ -17,7 +17,7 @@ public class ListNodeConverter implements NodeConverter<ListNode> {
 
     public <Y> Y convert(ListNode node, Class<Y> cls) {
         if (Object.class.equals(cls)) {
-            cls = (Class<Y>) List.class;
+            return (Y) convert(node, new TypeRef(List.class, new TypeRef(Object.class, null)));
         }
         if (cls.isArray()) {
             return (Y) convertArray(node, cls.getComponentType());
