@@ -24,7 +24,9 @@ public class IntNodeConverter implements NodeConverter<IntNode> {
     
     @Override
     public <Y> Y convert(IntNode node, Class<Y> cls) {
-        if (cls.isPrimitive()) {
+        if (Object.class.equals(cls)) {
+            cls = (Class<Y>) Long.class;
+        } else if (cls.isPrimitive()) {
             cls = (Class<Y>) WRAPPERS.get((Class<? extends Number>) cls);
             if (cls == null) {
                 throw new BencDeserializer.DeserializationException(

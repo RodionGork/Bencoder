@@ -9,7 +9,7 @@ public class BytesNodeConverter implements NodeConverter<BytesNode> {
     
     @Override
     public <Y> Y convert(BytesNode node, Class<Y> cls) {
-        if (cls.equals(String.class)) {
+        if (String.class.equals(cls) || Object.class.equals(cls)) {
             return (Y) node.getValueAsString();
         } else if (cls.equals(byte[].class)) {
             return (Y) node.getValue();
