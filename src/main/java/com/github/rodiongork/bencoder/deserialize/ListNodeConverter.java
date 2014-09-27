@@ -26,6 +26,10 @@ public class ListNodeConverter implements NodeConverter<ListNode> {
         throw new BencDeserializer.DeserializationException("List should be deserialized to list or array");
     }
     
+    public List convert(ListNode node, TypeRef ref) {
+        return null;
+    }
+    
     private Object convertArray(ListNode node, Class<?> itemClass) {
         int size = node.size();
         Object array = Array.newInstance(itemClass, size);
