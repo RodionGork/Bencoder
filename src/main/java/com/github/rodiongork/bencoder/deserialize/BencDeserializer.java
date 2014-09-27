@@ -20,7 +20,7 @@ public class BencDeserializer {
         return ((NodeConverter<T>) chooseConverter(node)).convert(node, cls);
     }
     
-    public <T extends BencNode> Object deserializeCollection(T node, TypeRef ref) {
+    public <T extends BencNode> Object deserialize(T node, TypeRef ref) {
         if (node instanceof ListNode) {
             return listNodeConverter.convert((ListNode) node, ref);
         } else if (node instanceof DictNode) {

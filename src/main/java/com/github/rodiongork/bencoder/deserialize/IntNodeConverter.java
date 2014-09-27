@@ -14,6 +14,7 @@ public class IntNodeConverter implements NodeConverter<IntNode> {
         WRAPPERS = new HashMap<>();
         WRAPPERS.put(int.class, Integer.class);
         WRAPPERS.put(long.class, Long.class);
+        WRAPPERS.put(short.class, Short.class);
         WRAPPERS.put(byte.class, Byte.class);
         WRAPPERS.put(float.class, Float.class);
         WRAPPERS.put(double.class, Double.class);
@@ -24,7 +25,7 @@ public class IntNodeConverter implements NodeConverter<IntNode> {
     
     @Override
     public <Y> Y convert(IntNode node, Class<Y> cls) {
-        if (Object.class.equals(cls)) {
+        if (Object.class.equals(cls) || Number.class.equals(cls)) {
             cls = (Class<Y>) Long.class;
         } else if (cls.isPrimitive()) {
             cls = (Class<Y>) WRAPPERS.get((Class<? extends Number>) cls);

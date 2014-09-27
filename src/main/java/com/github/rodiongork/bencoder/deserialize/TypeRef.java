@@ -7,10 +7,32 @@ import java.lang.reflect.WildcardType;
 import java.util.List;
 import java.util.Map;
 
-class TypeRef {
+public class TypeRef {
     
-    private Class container;
+    private Class self;
     private TypeRef items;
+    
+    public TypeRef(Class self, TypeRef items) {
+        this.self = self;
+        this.items = items;
+    }
+    
+    public Class getSelf() {
+        return self;
+    }
+    
+    public TypeRef getItems() {
+        return items;
+    }
+    
+    @Override
+    public String toString() {
+        if (items != null) {
+            return String.format("(%s of %s)", self.getSimpleName(), items.toString());
+        } else {
+            return self.getSimpleName();
+        }
+    }
     
     static TypeRef fromField(Field f) {
         ParameterizedType ptype;
@@ -61,17 +83,4 @@ class TypeRef {
         return new TypeRef(owner, fromAny(ata));
     }
     
-    TypeRef(Class container, TypeRef items) {
-        this.container = container;
-        this.items = items;
-    }
-    
-    @Override
-    public String toString() {
-        if (items != null) {
-            return String.format("(%s of %s)", container.getSimpleName(), items.toString());
-        } else {
-            return container.getSimpleName();
-        }
-    }
 }

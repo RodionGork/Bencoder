@@ -1,9 +1,11 @@
 package com.github.rodiongork.bencoder.deserialize;
 
+import com.github.rodiongork.bencoder.represent.BencNode;
 import com.github.rodiongork.bencoder.represent.ListNode;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ListNodeConverter implements NodeConverter<ListNode> {
     
@@ -20,14 +22,51 @@ public class ListNodeConverter implements NodeConverter<ListNode> {
         if (cls.isArray()) {
             return (Y) convertArray(node, cls.getComponentType());
         } else if (List.class.isAssignableFrom(cls)) {
-            //convertList(node, cls.isInterface() ? ArrayList.class : cls);
-            throw new BencDeserializer.DeserializationException("List could be only deserialized for a pojo field");
+            throw new BencDeserializer.DeserializationException(
+                    "List sould be only deserialized for a pojo field or via TypeRef");
         }
         throw new BencDeserializer.DeserializationException("List should be deserialized to list or array");
     }
     
     public List convert(ListNode node, TypeRef ref) {
-        return null;
+        Class listClass = suitableClass(ref.getSelf());
+        List list = instantiateList(listClass);
+        fillList(list, node, ref.getItems());
+        return list;
+    }
+    
+    private Class suitableClass(Class listClass) {
+        if (!List.class.isAssignableFrom(listClass)) {
+            if (listClass.isAssignableFrom(ArrayList.class)) {
+                return ArrayList.class;
+            } else {
+                throw new BencDeserializer.DeserializationException(
+                        "TypeRef is expected to hold the List type");
+            }
+        }
+        return listClass.isInterface() ? ArrayList.class : listClass;
+    }
+    
+    private List instantiateList(Class<? extends List> cls) {
+        try {
+            return cls.newInstance();
+        } catch (Exception e) {
+            throw new BencDeserializer.DeserializationException(
+                    "Could not instantiate list class " + cls);
+        }
+    }
+    
+    private void fillList(List list, ListNode node, TypeRef itemRef) {
+        Class itemClass = itemRef.getSelf();
+        if (List.class.isAssignableFrom(itemClass) || Map.class.isAssignableFrom(itemClass)) {
+            for (BencNode item : node) {
+                list.add(deserializer.deserialize(item, itemRef));
+            }
+        } else {
+            for (BencNode item : node) {
+                list.add(deserializer.deserialize(item, itemClass));
+            }
+        }
     }
     
     private Object convertArray(ListNode node, Class<?> itemClass) {
