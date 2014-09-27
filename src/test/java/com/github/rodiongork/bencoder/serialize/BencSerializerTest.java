@@ -3,9 +3,10 @@ package com.github.rodiongork.bencoder.serialize;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.rodiongork.bencoder.represent.BencGenerator;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.github.rodiongork.bencoder.represent.BencGenerator;
 
 public class BencSerializerTest {
 
@@ -28,6 +29,13 @@ public class BencSerializerTest {
         List<Object> array = Arrays.<Object>asList(-8, "How");
         byte[] res = BencGenerator.treeToBytes(new BencSerializer().serialize(array));
         Assert.assertEquals("li-8e3:Howe", new String(res));
+    }
+    
+    @Test
+    public void testStrings() {
+        Object[] array = {"Quart", new byte[]{65, 66, 67}};
+        byte[] res = BencGenerator.treeToBytes(new BencSerializer().serialize(array));
+        Assert.assertEquals("l5:Quart3:ABCe", new String(res));
     }
 
     @Test

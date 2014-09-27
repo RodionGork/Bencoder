@@ -26,7 +26,8 @@ public class BencSerializer {
             throw new SerializationException("Float values should not be serialized!");
         } else if (Number.class.isAssignableFrom(cls)) {
             return numberConverter;
-        } else if (CharSequence.class.isAssignableFrom(cls)) {
+        } else if (CharSequence.class.isAssignableFrom(cls)
+                || (cls.isArray() && byte.class.equals(cls.getComponentType()))) {
             return stringConverter;
         } else if (List.class.isAssignableFrom(cls) || cls.isArray()) {
             return listConverter;
